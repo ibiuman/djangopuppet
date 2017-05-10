@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+  ServerName villekauppinen.example.com
+
+  WSGIDaemonProcess villewsgi user=villewsgi group=villewsgi threads=5 python-path="/home/villewsgi/grouped/villeexamplecom/"
+  WSGIScriptAlias / /home/villewsgi/grouped/villeexamplecom/villeexamplecom/wsgi.py
+	<Directory /home/villewsgi/grouped/villeexamplecom/>
+		WSGIProcessGroup villewsgi
+		WSGIApplicationGroup %{GLOBAL}
+		WSGIScriptReloading On
+		Require all granted
+	</Directory>
+</VirtualHost>

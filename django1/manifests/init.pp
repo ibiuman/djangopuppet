@@ -1,0 +1,62 @@
+class django1 {
+
+
+	package {'apache2':
+		ensure => present,
+	}
+
+	package {"libapache2-mod-wsgi-py3":
+		ensure => present,
+	}
+
+	package {"python3-django":
+		ensure => present,
+	}	
+	
+	service {'apache2':
+		ensure => 'running',
+		enable => 'true',
+		require => Package["apache2"],
+	}
+	
+	user {'villewsgi':
+		ensure => 'present',
+		managehome => true,
+		gid => '1001',
+		shell => '/bin/bash',
+		groups => ['villewsgi'],
+		comment => 'Ville Kauppinen WSGI user',
+	}
+
+	group {'villewsgi':
+		gid => 1001,
+	}
+
+	file {'/home/villewsgi/grouped':
+		ensure => 'directory',
+	}
+
+	file {'/etc/apache2/sites-enabled/000-default.conf':
+		ensure => absent,
+		require => Package['apache2'],
+	}
+
+	file {'/etc/apache2/sites-available/ville.conf':
+		ensure => present,
+		content => template('django1/ville.conf.erb'),
+		require => Package['apache2'],
+	}
+
+	file {'/etc/apache2/sites-enabled/ville.conf':
+		ensure => link,
+		target => '/etc/apache2/sites-available/ville.conf',
+		require => File['/etc/apache2/sites-available/ville.conf'],
+	} 
+
+	exec { 'django-admin startproject':
+		command => 'django-admin startproject villeexamplecom',
+		path => '/home/villewsgi/grouped/',
+		notify => Service["apache2"],
+	}
+
+}
