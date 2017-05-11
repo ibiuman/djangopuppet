@@ -61,15 +61,19 @@ class django1 {
 		path => '/usr/local/bin:/usr/bin:/bin',
 		cwd => '/home/villewsgi/grouped/',
 		notify => Service["apache2"],
+		require => File['/home/villewsgi/grouped/'],
 	}
 
 	exec { 'chmod chown':
-		command => 'usermod --lock villewsgi;chmod u=rwx,g=srwx,o=x /home/villewsgi/grouped;chown -R villewsgi.villewsgi /home/villewsgi/;
-				find /home/villewsgi/grouped -type f -exec chmod -v ug=rw {} \;;
-				find /home/villewsgi/grouped -type d -exec chmod -v u=rwx,g=srwx {} \;;
-				adduser $(whoami) villewsgi;
+		command => 'sudo usermod --lock villewsgi &&
+				sudo chmod u=rwx,g=srwx,o=x /home/villewsgi/grouped &&
+				sudo chown -R villewsgi.villewsgi /home/villewsgi/ &&
+				sudo find /home/villewsgi/grouped -type f -exec chmod -v ug=rw {} \; &&
+				sudo find /home/villewsgi/grouped -type d -exec chmod -v u=rwx,g=srwx {} \; &&
+				sudo adduser $(whoami) villewsgi &&
 				newgrp villewsgi',
 		path => '/bin:/usr/sbin:/usr/bin',
+		require => User['villewsgi'],
 	}
 
 
