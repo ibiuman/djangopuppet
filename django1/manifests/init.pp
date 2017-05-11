@@ -73,8 +73,22 @@ class django1 {
 				sudo adduser $(whoami) villewsgi &&
 				newgrp villewsgi',
 		path => '/bin:/usr/sbin:/usr/bin',
-		require => User['villewsgi'],
+		require => [
+				User['villewsgi'],
+				File['/home/villewsgi/grouped/'],
+			],
+	}
+
+	exec {'enable wsgi':
+		command => 'sudo a2enmod wsgi',
+		path => '/usr/sbin/:/usr/bin/',
+		require => [
+				Package['apache2'],
+				Package['libapache2-mod-wsgi-py3'],
+			],
+		notify => Service['apache2'],
 	}
 
 
 }
+
