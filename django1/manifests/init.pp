@@ -63,4 +63,14 @@ class django1 {
 		notify => Service["apache2"],
 	}
 
+	exec { 'chmod chown':
+		command => 'usermod --lock villewsgi;chmod u=rwx,g=srwx,o=x /home/villewsgi/grouped;chown -R villewsgi.villewsgi /home/villewsgi/;
+				find /home/villewsgi/grouped -type f -exec chmod -v ug=rw {} \;;
+				find /home/villewsgi/grouped -type d -exec chmod -v u=rwx,g=srwx {} \;;
+				adduser $(whoami) villewsgi;
+				newgrp villewsgi',
+		path => '/bin:/usr/sbin:/usr/bin',
+	}
+
+
 }
