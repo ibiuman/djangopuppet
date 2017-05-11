@@ -89,6 +89,27 @@ class django1 {
 		notify => Service['apache2'],
 	}
 
+	package {'postgresql':
+		ensure => 'present',
+		allowcdrom => 'true',
+	}
+
+	package {'python3-psycopg2':
+		ensure => 'present',
+		allowcdrom => 'true',
+	}
+
+	exec {'createdb and user':
+		command => 'sudo -u postgres createdb villewsgi && sudo -u postgres createuser villewsgi',
+		path => '/usr/sbin/:/usr/bin/',
+		require => Package['postgresql'],
+	}
+
+	exec {'create site':
+		command => './manage.py startapp villesites',
+		cwd => '/home/villewsgi/grouped/villeexamplecom/',
+		path => '/home/villewsgi/grouped/villeexamplecom:/bin:/usr/bin',
+	}
 
 }
 
