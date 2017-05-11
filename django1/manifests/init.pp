@@ -3,14 +3,17 @@ class django1 {
 
 	package {'apache2':
 		ensure => present,
+		allowcdrom => 'true',
 	}
 
 	package {"libapache2-mod-wsgi-py3":
 		ensure => present,
+		allowcdrom => 'true',
 	}
 
 	package {"python3-django":
 		ensure => present,
+		allowcdrom => 'true',
 	}	
 	
 	service {'apache2':
@@ -55,7 +58,8 @@ class django1 {
 
 	exec { 'django-admin startproject':
 		command => 'django-admin startproject villeexamplecom',
-		path => '/home/villewsgi/grouped/',
+		path => '/usr/local/bin:/usr/bin:/bin',
+		cwd => '/home/villewsgi/grouped/',
 		notify => Service["apache2"],
 	}
 
