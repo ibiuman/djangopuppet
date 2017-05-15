@@ -130,7 +130,12 @@ class django1 {
 		path => '/usr/bin:/bin',
 		cwd => '/home/villewsgi/grouped/villeexamplecom/villeexamplecom',
 		notify => Service["apache2"],
-		require => Exec['create site'],
+		require => [
+				File['/home/villewsgi/grouped/villeexamplecom/villesites/templates/villesites/main.html'],
+				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/settings.py],				 
+				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/urls.py],
+				File['/home/villewsgi/grouped/villeexamplecom/villesites/views.py],
+			],
 
 	}	
 	
@@ -144,7 +149,7 @@ class django1 {
 	file {'/home/villewsgi/grouped/villeexamplecom/villesites/templates/villesites/main.html':
 		ensure => 'present',
 		content => template('django1/main.html.erb'),
-		require => Exec['create site'],
+		require => Exec['make dir'],
 	}
 
 
