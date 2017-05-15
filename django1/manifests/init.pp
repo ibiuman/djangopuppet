@@ -138,11 +138,13 @@ class django1 {
 		command => 'mkdir -p templates/villesites',
 		cwd => '/home/villewsgi/grouped/villeexamplecom/villesites',
 		path => '/usr/bin:/bin',
+		require => Exec['create site'],
 	}
 	
 	file {'/home/villewsgi/grouped/villeexamplecom/villesites/templates/villesites/main.html':
 		ensure => 'present',
 		content => template('django1/main.html.erb'),
+		require => Exec['create site'],
 	}
 
 
