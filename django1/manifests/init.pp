@@ -104,21 +104,25 @@ class django1 {
 		command => './manage.py startapp villesites',
 		cwd => '/home/villewsgi/grouped/villeexamplecom/',
 		path => '/home/villewsgi/grouped/villeexamplecom:/bin:/usr/bin',
+		require => Exec['django-admin startproject'],
 	}
 
 	file {'/home/villewsgi/grouped/villeexamplecom/villeexamplecom/settings.py':
 		ensure => 'present',
 		content => template('django1/settings.py.erb'),
+		require => Exec['create site'],
 	}
 
 	file {'/home/villewsgi/grouped/villeexamplecom/villeexamplecom/urls.py':
 		ensure => 'present',
 		content => template('django1/urls.py.erb'),
+		require => Exec['create site'],
 	}
 
 	file {'/home/villewsgi/grouped/villeexamplecom/villesites/views.py':
 		ensure => 'present',
 		content => template('django1/views.py.erb'),
+		require => Exec['create site'],
 	}
 
 	exec {'touch':
@@ -126,7 +130,20 @@ class django1 {
 		path => '/usr/bin:/bin',
 		cwd => '/home/villewsgi/grouped/villeexamplecom/villeexamplecom',
 		notify => Service["apache2"],
+		require => Exec['create site'],
+
 	}	
+	
+	exec {'make dir':
+		command => 'mkdir -p templates/villesites',
+		cwd => '/home/villewsgi/grouped/villeexamplecom/villesites',
+		path => '/usr/bin:/bin',
+	}
+	
+	file {'/home/villewsgi/grouped/villeexamplecom/villesites/templates/villesites/main.html':
+		ensure => 'present',
+		content => template('django1/main.html.erb'),
+	}
 
 
 
