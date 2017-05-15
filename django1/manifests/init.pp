@@ -65,17 +65,12 @@ class django1 {
 	}
 
 	exec { 'chmod chown':
-		command => 'sudo usermod --lock villewsgi &&
-				sudo chmod u=rwx,g=srwx,o=x /home/villewsgi/grouped &&
-				sudo chown -R villewsgi.villewsgi /home/villewsgi/ &&
-				sudo find /home/villewsgi/grouped -type f -exec chmod -v ug=rw {} \; &&
-				sudo find /home/villewsgi/grouped -type d -exec chmod -v u=rwx,g=srwx {} \; &&
-				sudo adduser $(whoami) villewsgi &&
-				newgrp villewsgi',
+		command => 'sudo chown -R $(whoami).villewsgi /home/villewsgi/',
 		path => '/bin:/usr/sbin:/usr/bin',
 		require => [
 				User['villewsgi'],
 				File['/home/villewsgi/grouped/'],
+				Exec['create site'],
 			],
 	}
 
@@ -110,6 +105,30 @@ class django1 {
 		cwd => '/home/villewsgi/grouped/villeexamplecom/',
 		path => '/home/villewsgi/grouped/villeexamplecom:/bin:/usr/bin',
 	}
+
+	file {'/home/villewsgi/grouped/villeexamplecom/villeexamplecom/settings.py':
+		ensure => 'present',
+		content => template('django1/settings.py.erb'),
+	}
+
+	file {'/home/villewsgi/grouped/villeexamplecom/villeexamplecom/urls.py':
+		ensure => 'present',
+		content => template('django1/urls.py.erb'),
+	}
+
+	file {'/home/villewsgi/grouped/villeexamplecom/villesites/views.py':
+		ensure => 'present',
+		content => template('django1/views.py.erb'),
+	}
+
+	exec {'touch':
+		command => 'touch wsgi.py',
+		path => '/usr/bin:/bin',
+		cwd => '/home/villewsgi/grouped/villeexamplecom/villeexamplecom',
+		notify => Service["apache2"],
+	}	
+
+
 
 }
 
