@@ -132,9 +132,9 @@ class django1 {
 		notify => Service["apache2"],
 		require => [
 				File['/home/villewsgi/grouped/villeexamplecom/villesites/templates/villesites/main.html'],
-				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/settings.py],				 
-				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/urls.py],
-				File['/home/villewsgi/grouped/villeexamplecom/villesites/views.py],
+				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/settings.py'],
+				File['/home/villewsgi/grouped/villeexamplecom/villeexamplecom/urls.py'],
+				File['/home/villewsgi/grouped/villeexamplecom/villesites/views.py'],
 			],
 
 	}	
